@@ -45,6 +45,7 @@ extern/*
 # ignore cmake files if they end up in the root
 CMakeCache.txt
 CMakeFiles/
+ttvfs-prefix
 Makefile
 cmake_install.cmake
 musicgame
