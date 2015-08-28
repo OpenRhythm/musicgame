@@ -35,10 +35,14 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
 endif()
 
+include(FindBoost)
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(GLM REQUIRED)
 find_package(OpenGL REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${FREETYPE_INCLUDE_DIRS})
 include_directories(${GLM_INCLUDE_DIRS})
@@ -107,6 +111,15 @@ set(GL ${CMAKE_CURRENT_SOURCE_DIR}/src/gl/gl_core32.h
 
 source_group("src\\gl" FILES ${GL})
 
+
+set(LIBRARY_SOURCE  ${CMAKE_CURRENT_SOURCE_DIR}/src/library/node.cpp)
+
+set(LIBRARY_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/library/node.hpp)
+
+source_group("src\\library" FILES ${LIBRARY_SOURCE} ${LIBRARY_HEADERS})
+
+
+
 include_directories(${CMAKE_SOURCE_DIR}/extern/ttvfs/ttvfs)
 include_directories(${CMAKE_SOURCE_DIR}/extern/ttvfs/ttvfs_zip)
 include_directories(${CMAKE_SOURCE_DIR}/extern/stb)
@@ -120,7 +133,10 @@ endif()
 
 source_group("extern\\stb" FILES ${STB_SRC})
 
-set( SOURCE ${CORE_HEADERS} ${CORE_SOURCE} ${GAME_SOURCE} ${GAME_HEADERS} ${ttvfs_SRC} ${ttvfs_zip_SRC} ${GL})
+set( SOURCE ${CORE_SOURCE}      ${CORE_HEADERS}
+            ${GAME_SOURCE}      ${GAME_HEADERS}
+            ${LIBRARY_SOURCE}   ${LIBRARY_HEADERS}
+            ${ttvfs_SRC} ${ttvfs_zip_SRC} ${GL})
 
 add_executable(musicgame ${SOURCE})
 
@@ -133,6 +149,8 @@ add_custom_command(TARGET musicgame PRE_BUILD
 add_custom_command(TARGET musicgame PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                    ${SOURCE_DATA_DIR} $<TARGET_FILE_DIR:musicgame>/data/)
+
+
 
 include(ExternalProject)
 ExternalProject_add(ttvfs
@@ -165,4 +183,11 @@ else()
     set(ttvfs_libs ${BINARY_DIR}/ttvfs/libttvfs.a)
 endif()
 
-target_link_libraries(musicgame ${ttvfs_libs} ${OPENGL_LIBRARIES} ${SDL2_LIBRARY} ${FREETYPE_LIBRARIES})
+target_link_libraries(musicgame
+    ${ttvfs_libs}
+    ${OPENGL_LIBRARIES}
+    ${SDL2_LIBRARY}
+    ${FREETYPE_LIBRARIES}
+    ${Boost_SYSTEM_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    )
