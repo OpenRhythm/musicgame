@@ -1,10 +1,76 @@
 #include <iostream>
-#include <SDL_mixer.h>
 
 #include "basicAudio.hpp"
 
-bool audio_is_playing = false;
-Mix_Music* music;
+Song::Song(const std::string filename)
+: filename(filename),
+  validMusic(false) {
+    music = Mix_LoadMUS(this->filename.data());
+    if (!music) {
+        cerr << "Could not load the music : "
+             << Mix_GetError()
+             << endl;
+    }
+    validMusic = true;
+
+    Mix_HookMusicFinished(*musicHasFinished);
+}
+
+bool Song::song_is_playing = false;
+
+bool Song::isPlaying(){
+    return song_is_playing;
+}
+
+
+void Song::play(){
+    if (Mix_PlayMusic(
+            music,
+            1) == -1) {
+        cerr << "Could not play the music : "
+             << Mix_GetError()
+             << endl;
+    }
+    song_is_playing = true;
+}
+
+void Song::playWithFadeIn(double fadeInLength, double timeAtFadeInStart){
+    cout << "playwithfadein" << fadeInLength*1000 << endl;
+    if (Mix_FadeInMusicPos(
+            music,
+            1,          // Repetition count
+            fadeInLength*1000,
+            timeAtFadeInStart) == -1) {
+        cerr << "Could not play the music : "
+             << Mix_GetError()
+             << endl;
+    }
+    song_is_playing = true;
+}
+
+void Song::pause(){
+    Mix_PauseMusic();
+    song_is_playing = false;
+}
+
+void Song::pauseWithFadeOut(double fadeOutLength){
+    cout << "startFadeOut" << endl;
+    Mix_FadeOutMusic(2000);
+}
+
+
+void Song::musicHasFinished() {
+    cout << "musicHasFinished" << endl;
+    song_is_playing = false;
+}
+
+
+void Song::setOnMusicFinishedCallback(void (*music_finished)(void)){
+
+}
+
+
+
 
 int init_audio() {
     int initted=Mix_Init(SDL2MIXER_FLAGS);
@@ -24,8 +90,8 @@ int init_audio() {
         return 1;
     }
 
-        cout << "Mix initialized without errors"
-                  << endl;
+    cout << "Mix initialized without errors"
+              << endl;
     return 0;
 }
 
@@ -33,8 +99,6 @@ void deinit_audio() {
     Mix_CloseAudio();
     Mix_Quit();
 }
-
-
 
 void test_audio() {
     // print the number of sample chunk decoders available
@@ -47,32 +111,6 @@ void test_audio() {
                   << " is for " << Mix_GetChunkDecoder(i)
                   << endl;
 
-    music = Mix_LoadMUS(OggTestFile);
-    if(!music) {
-        printf("Mix_LoadMUS: %s\n", Mix_GetError());
-        // handle error
-    }
     printf("Average volume is %d\n",Mix_Volume(-1,-1));
-
-    Mix_HookMusicFinished(*fadeOutHasFinished);
-
-    if(Mix_FadeInMusicPos(music, -1, 2000,10)==-1) {
-        printf("Mix_PlayMusic: %s\n", Mix_GetError());
-        // well, there's no music, but most games don't break without music...
-    }
-    audio_is_playing = true;
 }
 
-void startFadeOutMusic() {
-    cout << "startFadeOutMusic" << endl;
-    Mix_FadeOutMusic(2000);
-}
-
-void fadeOutHasFinished() {
-    cout << "fadeOutHasFinished" << endl;
-    audio_is_playing = false;
-}
-
-bool is_audio_playing() {
-    return audio_is_playing;
-}
