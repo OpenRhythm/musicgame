@@ -55,7 +55,7 @@ void Song::pause(){
 
 void Song::pauseWithFadeOut(double fadeOutLength){
     cout << "startFadeOut" << endl;
-    Mix_FadeOutMusic(2000);
+    Mix_FadeOutMusic(fadeOutLength*1000);
 }
 
 
