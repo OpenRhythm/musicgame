@@ -57,7 +57,7 @@ int VorbisSong::readBuffer(char* buffer, int bufferSize) {
     switch(read_ret) {
         case 0:         // indicates EOF
             eof = 1;
-            std::cout << "auie" << std::endl;
+            std::cout << "eof" << std::endl;
             return 1;
             break;
         case OV_HOLE:
@@ -68,10 +68,10 @@ int VorbisSong::readBuffer(char* buffer, int bufferSize) {
         case OV_EINVAL:
                 // indicates the initial file headers couldn't be read or are corrupt, or that the initial open call for vf failed.
             // There was an error, TL;DR
-            std::cout << "auie" << std::endl;
+            std::cout << "vorbis_read_error: " << read_ret << std::endl;
             break;
         default:
-            return 0;
+            return read_ret;
     }
 }
 

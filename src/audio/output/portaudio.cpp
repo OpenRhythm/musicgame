@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include <portaudio.h>
 #include "portaudio.hpp"
 
@@ -21,7 +22,11 @@ static int patestCallback(  const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
     (void) inputBuffer;
 
-    mysong->readBuffer((char*)outputBuffer, 4*framesPerBuffer);
+    std::cout << "asking  " << 4*framesPerBuffer << " bytes (" << framesPerBuffer << " frames)" << std::endl;
+
+    int decoded_bytes = mysong->readBuffer((char*)outputBuffer, 4*framesPerBuffer);
+
+    std::cout << "decoded " << decoded_bytes     << " bytes (" << decoded_bytes/4 << " frames)" << std::endl << std::endl;
 
     return paContinue;
 }
