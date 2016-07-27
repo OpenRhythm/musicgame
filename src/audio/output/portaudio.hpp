@@ -3,6 +3,9 @@
 
 #include "codec.hpp"
 
-int pa_main(Codec *thesong);
+namespace FSaudio {
 
+    int pa_main(Codec *thesong);
+
+}
 #endif

@@ -11,23 +11,30 @@
 #   include <fcntl.h>
 #endif
 
-class VorbisSong: public Codec {
-public:
-    VorbisSong(const std::string filename)
-    : Codec(filename) {};
+namespace FSaudio {
 
-    void getInfo();
-    int open();
-    int close();
+    class VorbisSong: public Codec {
+    public:
+        VorbisSong(const std::string filename)
+        : Codec(filename) {};
 
-    int readBuffer(char* buffer, int bufferSize);
+        // @inherit
+        void getInfo();
+        // @inherit
+        int open();
+        // @inherit
+        int close();
+
+        int readBuffer(char* buffer, int bufferSize);
 
 
-protected:
-    FILE *myFile;
-    OggVorbis_File myVorbisFile;
-    int eof=0;
-    int current_section = 0;
-};
+    protected:
+        FILE *myFile;
+        OggVorbis_File myVorbisFile;
+        int eof=0;
+        int current_section = 0;
+    };
+
+}
 
 #endif  // VORBIS_HPP
