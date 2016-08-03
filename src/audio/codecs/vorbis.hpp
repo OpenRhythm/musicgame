@@ -21,6 +21,14 @@ namespace FSaudio {
         // @inherit
         void getInfo();
         // @inherit
+        virtual int getSampleRate();
+        // @inherit
+        virtual int getBitDepth() { return 16; };
+        // @inherit
+        virtual int getChannelCount();
+        // @inherit
+        virtual double getPosition();
+        // @inherit
         int open();
         // @inherit
         int close();

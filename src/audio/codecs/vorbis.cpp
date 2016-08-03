@@ -35,15 +35,29 @@ namespace FSaudio {
 
     int VorbisSong::close() {
         ov_clear(&myVorbisFile);
+        return 0;
+    }
+
+    int VorbisSong::getSampleRate() {
+        return ov_info(&myVorbisFile,-1)->rate;
+    }
+
+    int VorbisSong::getChannelCount() {
+        return ov_info(&myVorbisFile,-1)->channels;
+    }
+
+    double VorbisSong::getPosition() {
+        return ov_time_tell(&myVorbisFile);
     }
 
     void VorbisSong::getInfo() {
-        char **ptr=ov_comment(&myVorbisFile,-1)->user_comments;
+        //char **ptr=ov_comment(&myVorbisFile,-1)->user_comments;
+        // while(*ptr){
+        //   fprintf(stderr,"%s\n",*ptr);
+        //   ++ptr;
+        // }
+
         vorbis_info *vi=ov_info(&myVorbisFile,-1);
-        while(*ptr){
-          fprintf(stderr,"%s\n",*ptr);
-          ++ptr;
-        }
         fprintf(stderr,"\nBitstream is %d channel, %ldHz\n",vi->channels,vi->rate);
         fprintf(stderr,"\nDecoded length: %ld samples\n",
                 (long)ov_pcm_total(&myVorbisFile,-1));
@@ -70,6 +84,7 @@ namespace FSaudio {
                     // indicates the initial file headers couldn't be read or are corrupt, or that the initial open call for vf failed.
                 // There was an error, TL;DR
                 std::cout << "vorbis_read_error: " << read_ret << std::endl;
+                return 0;
                 break;
             default:
                 return read_ret;

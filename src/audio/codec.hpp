@@ -21,6 +21,12 @@ namespace FSaudio {
         // TODO return a structure ?
         virtual void getInfo() = 0;
 
+        // Get the sample rate of the file
+        virtual int getSampleRate() = 0;
+        // Get the bit depth of the file
+        virtual int getBitDepth() = 0;
+        // Get the number of audio channels in the file
+        virtual int getChannelCount() = 0;
         // Opens the audio file
         // Some heavy file access and decoding may occur here !
         // @return an error code TODO document and implement
@@ -39,7 +45,7 @@ namespace FSaudio {
         // Returns the position inside the audio file
         // @return the value (in SOMETHING (seconds ?)) inside the audio file
         // TODO return a structure with more info ? (frame/time/total/…)
-        virtual double getPosition() {};
+        virtual double getPosition() = 0;
 
     protected:
         // The filename (absolute or relative path)
