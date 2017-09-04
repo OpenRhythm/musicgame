@@ -347,6 +347,12 @@ add_executable(midiplayer
 
 target_link_libraries(midiplayer ${LIBRARIES})
 
+add_executable(uitest
+    $<TARGET_OBJECTS:ORCore-obj>
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/tests/uitest.cpp)
+
+target_link_libraries(uitest ${LIBRARIES})
+
 
 ####################################################################
 #   Documentation

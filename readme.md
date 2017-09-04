@@ -1,4 +1,5 @@
 # OpenRhythm
+[![Discord](https://img.shields.io/discord/277133146007404544.svg)](https://discord.gg/BgDgs5)
 
 OpenRhythm currently depends on the following libs:
 * CMake
